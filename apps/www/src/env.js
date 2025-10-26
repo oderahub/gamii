@@ -1,0 +1,47 @@
+import { createEnv } from '@t3-oss/env-nextjs';
+import { z } from 'zod';
+
+export const env = createEnv({
+  server: {
+    NODE_ENV: z.enum(['development', 'test', 'production']),
+    HEDERA_ECDSA_PRIVATE_KEY: z.string().optional(),
+    HEDERA_ED25519_PRIVATE_KEY_DER: z.string().optional(),
+    HEDERA_ED25519_PRIVATE_KEY_HEX: z.string().optional(),
+  },
+  client: {
+    NEXT_PUBLIC_WALLETCONNECT_ID: z.string().min(1),
+    NEXT_PUBLIC_HEDERA_NETWORK: z.enum(['testnet', 'mainnet']).default('testnet'),
+    NEXT_PUBLIC_HEDERA_CHAIN_ID: z.string().default('296'),
+    NEXT_PUBLIC_HEDERA_ECDSA_ACCOUNT_ID: z.string().optional(),
+    NEXT_PUBLIC_HEDERA_ECDSA_EVM_ADDRESS: z.string().optional(),
+    NEXT_PUBLIC_HEDERA_ED25519_ACCOUNT_ID: z.string().optional(),
+    NEXT_PUBLIC_HEDERA_JSON_RPC: z.string().url().default('https://testnet.hashio.io/api'),
+    NEXT_PUBLIC_HEDERA_MIRROR_NODE: z.string().url().default('https://testnet.mirrornode.hedera.com'),
+    NEXT_PUBLIC_GAME_FACTORY_ADDRESS: z.string().optional(),
+    NEXT_PUBLIC_REVEAL_VERIFIER_ADDRESS: z.string().optional(),
+    NEXT_PUBLIC_SHUFFLE_VERIFIER_ADDRESS: z.string().optional(),
+    NEXT_PUBLIC_POKER_CHIP_TOKEN_ID: z.string().optional(),
+    NEXT_PUBLIC_TOURNAMENT_TICKET_NFT_ID: z.string().optional(),
+    NEXT_PUBLIC_ACHIEVEMENT_BADGE_NFT_ID: z.string().optional(),
+    NEXT_PUBLIC_GLOBAL_LOBBY_TOPIC_ID: z.string().optional(),
+  },
+  experimental__runtimeEnv: {
+    NEXT_PUBLIC_WALLETCONNECT_ID: process.env.NEXT_PUBLIC_WALLETCONNECT_ID,
+    NEXT_PUBLIC_HEDERA_NETWORK: process.env.NEXT_PUBLIC_HEDERA_NETWORK,
+    NEXT_PUBLIC_HEDERA_CHAIN_ID: process.env.NEXT_PUBLIC_HEDERA_CHAIN_ID,
+    NEXT_PUBLIC_HEDERA_ECDSA_ACCOUNT_ID: process.env.NEXT_PUBLIC_HEDERA_ECDSA_ACCOUNT_ID,
+    NEXT_PUBLIC_HEDERA_ECDSA_EVM_ADDRESS: process.env.NEXT_PUBLIC_HEDERA_ECDSA_EVM_ADDRESS,
+    NEXT_PUBLIC_HEDERA_ED25519_ACCOUNT_ID: process.env.NEXT_PUBLIC_HEDERA_ED25519_ACCOUNT_ID,
+    NEXT_PUBLIC_HEDERA_JSON_RPC: process.env.NEXT_PUBLIC_HEDERA_JSON_RPC,
+    NEXT_PUBLIC_HEDERA_MIRROR_NODE: process.env.NEXT_PUBLIC_HEDERA_MIRROR_NODE,
+    NEXT_PUBLIC_GAME_FACTORY_ADDRESS: process.env.NEXT_PUBLIC_GAME_FACTORY_ADDRESS,
+    NEXT_PUBLIC_REVEAL_VERIFIER_ADDRESS: process.env.NEXT_PUBLIC_REVEAL_VERIFIER_ADDRESS,
+    NEXT_PUBLIC_SHUFFLE_VERIFIER_ADDRESS: process.env.NEXT_PUBLIC_SHUFFLE_VERIFIER_ADDRESS,
+    NEXT_PUBLIC_POKER_CHIP_TOKEN_ID: process.env.NEXT_PUBLIC_POKER_CHIP_TOKEN_ID,
+    NEXT_PUBLIC_TOURNAMENT_TICKET_NFT_ID: process.env.NEXT_PUBLIC_TOURNAMENT_TICKET_NFT_ID,
+    NEXT_PUBLIC_ACHIEVEMENT_BADGE_NFT_ID: process.env.NEXT_PUBLIC_ACHIEVEMENT_BADGE_NFT_ID,
+    NEXT_PUBLIC_GLOBAL_LOBBY_TOPIC_ID: process.env.NEXT_PUBLIC_GLOBAL_LOBBY_TOPIC_ID,
+  },
+  skipValidation: Boolean(process.env.SKIP_ENV_VALIDATION),
+  emptyStringAsUndefined: true,
+});
