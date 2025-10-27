@@ -23,6 +23,8 @@ export const env = createEnv({
     NEXT_PUBLIC_POKER_CHIP_TOKEN_ID: z.string().optional(),
     NEXT_PUBLIC_TOURNAMENT_TICKET_NFT_ID: z.string().optional(),
     NEXT_PUBLIC_ACHIEVEMENT_BADGE_NFT_ID: z.string().optional(),
+    NEXT_PUBLIC_GAME_EVENTS_TOPIC_ID: z.string().optional(),
+    NEXT_PUBLIC_GAME_CHAT_TOPIC_ID: z.string().optional(),
     NEXT_PUBLIC_GLOBAL_LOBBY_TOPIC_ID: z.string().optional(),
   },
   experimental__runtimeEnv: {
@@ -40,6 +42,8 @@ export const env = createEnv({
     NEXT_PUBLIC_POKER_CHIP_TOKEN_ID: process.env.NEXT_PUBLIC_POKER_CHIP_TOKEN_ID,
     NEXT_PUBLIC_TOURNAMENT_TICKET_NFT_ID: process.env.NEXT_PUBLIC_TOURNAMENT_TICKET_NFT_ID,
     NEXT_PUBLIC_ACHIEVEMENT_BADGE_NFT_ID: process.env.NEXT_PUBLIC_ACHIEVEMENT_BADGE_NFT_ID,
+    NEXT_PUBLIC_GAME_EVENTS_TOPIC_ID: process.env.NEXT_PUBLIC_GAME_EVENTS_TOPIC_ID,
+    NEXT_PUBLIC_GAME_CHAT_TOPIC_ID: process.env.NEXT_PUBLIC_GAME_CHAT_TOPIC_ID,
     NEXT_PUBLIC_GLOBAL_LOBBY_TOPIC_ID: process.env.NEXT_PUBLIC_GLOBAL_LOBBY_TOPIC_ID,
   },
   skipValidation: Boolean(process.env.SKIP_ENV_VALIDATION),

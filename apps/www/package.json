@@ -11,7 +11,8 @@
     "start": "next start",
     "create-tokens": "tsx scripts/create-all-tokens.ts",
     "create-poker-chip": "tsx scripts/create-poker-chip.ts",
-    "create-nfts": "tsx scripts/create-nfts.ts"
+    "create-nfts": "tsx scripts/create-nfts.ts",
+    "create-topics": "tsx scripts/create-hcs-topics.ts"
   },
   "dependencies": {
     "@hashgraph/sdk": "^2.49.2",
