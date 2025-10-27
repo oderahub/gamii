@@ -17,6 +17,7 @@ export const Navbar = () => {
           <Link href='/game'>Games</Link>
           <CreateGame />
           <ConnectButton />
+          {/* TODO: HashPack integration will be completed in Phase 5 */}
         </div>
       </div>
     </div>

@@ -30,8 +30,8 @@ export const Overlay = ({
       return (
         <div className='pointer-events-none fixed inset-0 z-40'>
           <button
-            type='button'
             className='pointer-events-auto fixed left-[50%] top-8 z-40 flex translate-x-[-50%] cursor-pointer items-center gap-3 rounded-full border border-amber-500/50 bg-background px-6 py-3 shadow-2xl transition-all hover:scale-105'
+            type='button'
             style={{
               backgroundImage: `url(${GoldBG.src})`,
               objectFit: 'cover',
@@ -68,8 +68,8 @@ export const Overlay = ({
           >
             {Boolean(minimizable) && (
               <button
-                type='button'
                 className='absolute right-4 top-4 rounded-full bg-amber-500/20 p-2 transition-all hover:bg-amber-500/40'
+                type='button'
                 onClick={() => setIsMinimized(true)}
               >
                 <Minimize2 className='h-5 w-5 text-amber-400' />
@@ -87,8 +87,8 @@ export const Overlay = ({
     return (
       <div className='pointer-events-none fixed inset-0 z-40'>
         <button
-          type='button'
           className='pointer-events-auto fixed left-[50%] top-8 z-40 flex translate-x-[-50%] cursor-pointer items-center gap-3 rounded-full border border-amber-500/50 bg-background px-6 py-3 shadow-2xl transition-all hover:scale-105'
+          type='button'
           style={{
             backgroundImage: `url(${GoldBG.src})`,
             objectFit: 'cover',
@@ -125,8 +125,8 @@ export const Overlay = ({
         >
           {Boolean(minimizable) && (
             <button
-              type='button'
               className='absolute right-4 top-4 rounded-full bg-amber-500/20 p-2 transition-all hover:bg-amber-500/40'
+              type='button'
               onClick={() => setIsMinimized(true)}
             >
               <Minimize2 className='h-5 w-5 text-amber-400' />

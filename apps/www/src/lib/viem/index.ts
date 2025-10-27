@@ -6,41 +6,27 @@ import {
   createStorage,
   http,
 } from 'wagmi';
-import { injected, walletConnect } from 'wagmi/connectors';
+import { injected } from 'wagmi/connectors';
 import { env } from '~/env';
 
 import { GAME_ABI, GAME_FACTORY_ABI } from './abi';
 import { hederaTestnet } from '~/lib/hedera/chains';
 
-export const projectId = env.NEXT_PUBLIC_WALLETCONNECT_ID;
-
-// Contract addresses - will be deployed on Hedera Testnet
+// Contract addresses deployed on Hedera Testnet
 const AddressConfig = {
-  GAME_FACTORY_ADDRESS: env.NEXT_PUBLIC_GAME_FACTORY_ADDRESS || '',
-  REVEAL_VERIFIER: env.NEXT_PUBLIC_REVEAL_VERIFIER_ADDRESS || '',
-  SHUFFLE_VERIFIER: env.NEXT_PUBLIC_SHUFFLE_VERIFIER_ADDRESS || '',
+  GAME_FACTORY_ADDRESS: env.NEXT_PUBLIC_GAME_FACTORY_ADDRESS ?? '',
+  REVEAL_VERIFIER: env.NEXT_PUBLIC_REVEAL_VERIFIER_ADDRESS ?? '',
+  SHUFFLE_VERIFIER: env.NEXT_PUBLIC_SHUFFLE_VERIFIER_ADDRESS ?? '',
 };
 
-const metadata = {
-  name: 'Texas Hold\'em ZK Poker',
-  description: 'Play poker with zero-knowledge shuffles on Hedera',
-  url: typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000',
-  icons: ['https://avatars.githubusercontent.com/u/37784886'],
-};
-
-// Only initialize WalletConnect on client side to avoid SSR indexedDB errors
+// Initialize connector for injected wallets (MetaMask, HashPack browser extension, etc.)
 const getConnectors = () => {
-  const connectors = [];
-
-  // Always available: injected wallet (MetaMask, etc.)
-  connectors.push(injected({ shimDisconnect: true }));
-
-  // Only add WalletConnect on client side
-  if (typeof window !== 'undefined') {
-    connectors.push(walletConnect({ projectId, metadata, showQrModal: false }));
-  }
-
-  return connectors;
+  return [
+    injected({
+      shimDisconnect: true,
+      target: 'metaMask' // Prioritize MetaMask if available
+    }),
+  ];
 };
 
 export const wagmiConfig: Config = createConfig({

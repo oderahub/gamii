@@ -17,6 +17,8 @@ import {
 } from '~/components/ui/popover';
 
 import { BadgeDollarSign } from 'lucide-react';
+import { useGameEventPublisher } from '~/lib/hooks/useHCS';
+import { MessageType } from '~/lib/hedera/hcs';
 
 interface PlaceBetProps {
   contractAddress: `0x${string}`;
@@ -33,6 +35,7 @@ export const PlaceBet = ({
 }: PlaceBetProps) => {
   const { writeContractAsync } = useWriteContract();
   const { address } = useAccount();
+  const { publishEvent } = useGameEventPublisher(contractAddress);
 
   const [betAmount, setBetAmount] = useState<string>('');
 
@@ -58,6 +61,22 @@ export const PlaceBet = ({
           args: [BigInt(betAmount)],
         });
         await waitForTransactionReceipt(wagmiConfig, { hash });
+
+        // Publish to HCS for real-time updates
+        try {
+          await publishEvent(
+            MessageType.PLAYER_ACTION,
+            {
+              action: Number(betAmount) === highestBet ? 'call' : 'raise',
+              amount: betAmount,
+            },
+            address
+          );
+        } catch (hcsError) {
+          console.warn('Failed to publish HCS event:', hcsError);
+          // Don't fail the transaction if HCS publish fails
+        }
+
         await refresh();
         setBetAmount('');
       } catch (error) {

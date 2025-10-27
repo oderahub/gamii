@@ -59,6 +59,11 @@ export async function transferPokerChips(
   amount: number
 ): Promise<string> {
   const client = createHederaClient();
+
+  if (!TOKENS.POKER_CHIP) {
+    throw new Error('POKER_CHIP token ID not configured in environment');
+  }
+
   const tokenId = TokenId.fromString(TOKENS.POKER_CHIP);
 
   // Amount is in "cents" (with 2 decimals)
@@ -158,7 +163,7 @@ export async function transferNFT(
 export async function getNFTsForAccount(
   accountId: string,
   tokenId: string
-): Promise<Array<{ serial_number: number; metadata: string }>> {
+): Promise<{ serial_number: number; metadata: string }[]> {
   const mirrorNodeUrl = env.NEXT_PUBLIC_HEDERA_MIRROR_NODE;
 
   const response = await fetch(

@@ -24,9 +24,13 @@ function patchWasmModuleImport(isServer, config) {
 
 /** @type {import("next").NextConfig} */
 const config = {
+  eslint: {
+    // ESLint now configured properly - warnings only for advanced features
+    ignoreDuringBuilds: false,
+  },
   webpack: (config, { isServer }) => {
     config.externals.push('pino-pretty', 'lokijs', 'encoding');
-    
+
     // Enhanced fallback configuration to handle both browser and SSR issues
     config.resolve.fallback = {
       ...config.resolve.fallback,
@@ -36,7 +40,7 @@ const config = {
       // Fix for MetaMask SDK React Native dependency
       '@react-native-async-storage/async-storage': false,
     };
-    
+
     patchWasmModuleImport(isServer, config);
 
     return config;

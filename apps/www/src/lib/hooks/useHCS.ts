@@ -22,7 +22,7 @@ import {
  * Hook to subscribe to game events for a specific game
  * Replaces contract event polling
  */
-export function useGameEvents(gameId: string | undefined, enabled: boolean = true) {
+export function useGameEvents(gameId: string | undefined, enabled = true) {
   const [events, setEvents] = useState<HCSMessage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -75,7 +75,7 @@ export function useGameEvents(gameId: string | undefined, enabled: boolean = tru
 /**
  * Hook to subscribe to game chat messages
  */
-export function useGameChat(gameId: string | undefined, enabled: boolean = true) {
+export function useGameChat(gameId: string | undefined, enabled = true) {
   const [messages, setMessages] = useState<HCSMessage<ChatMessageData>[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -145,7 +145,7 @@ export function useGameChat(gameId: string | undefined, enabled: boolean = true)
 /**
  * Hook to subscribe to global lobby updates
  */
-export function useLobbyState(enabled: boolean = true) {
+export function useLobbyState(enabled = true) {
   const [lobbyState, setLobbyState] = useState<LobbyUpdateData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);

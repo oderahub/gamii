@@ -86,13 +86,13 @@ export interface ChatMessageData {
 
 export interface LobbyUpdateData {
   activeGames: number;
-  games: Array<{
+  games: {
     id: string;
     players: number;
     maxPlayers: number;
     buyIn: string;
     status: 'waiting' | 'active' | 'ended';
-  }>;
+  }[];
 }
 
 /**
@@ -276,7 +276,7 @@ export async function getLobbyState(
 export function createHCSPoller<T>(
   fetchFn: (since?: number) => Promise<HCSMessage<T>[]>,
   onMessage: (messages: HCSMessage<T>[]) => void,
-  intervalMs: number = 2000
+  intervalMs = 2000
 ) {
   let lastTimestamp = Date.now();
   let intervalId: NodeJS.Timeout;

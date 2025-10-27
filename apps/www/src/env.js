@@ -9,7 +9,6 @@ export const env = createEnv({
     HEDERA_ED25519_PRIVATE_KEY_HEX: z.string().optional(),
   },
   client: {
-    NEXT_PUBLIC_WALLETCONNECT_ID: z.string().min(1),
     NEXT_PUBLIC_HEDERA_NETWORK: z.enum(['testnet', 'mainnet']).default('testnet'),
     NEXT_PUBLIC_HEDERA_CHAIN_ID: z.string().default('296'),
     NEXT_PUBLIC_HEDERA_ECDSA_ACCOUNT_ID: z.string().optional(),
@@ -28,7 +27,6 @@ export const env = createEnv({
     NEXT_PUBLIC_GLOBAL_LOBBY_TOPIC_ID: z.string().optional(),
   },
   experimental__runtimeEnv: {
-    NEXT_PUBLIC_WALLETCONNECT_ID: process.env.NEXT_PUBLIC_WALLETCONNECT_ID,
     NEXT_PUBLIC_HEDERA_NETWORK: process.env.NEXT_PUBLIC_HEDERA_NETWORK,
     NEXT_PUBLIC_HEDERA_CHAIN_ID: process.env.NEXT_PUBLIC_HEDERA_CHAIN_ID,
     NEXT_PUBLIC_HEDERA_ECDSA_ACCOUNT_ID: process.env.NEXT_PUBLIC_HEDERA_ECDSA_ACCOUNT_ID,

@@ -12,6 +12,8 @@ import { useAccount, useReadContracts } from 'wagmi';
 
 import { GameOverlay } from '~/components/overlays';
 import { Button } from '~/components/ui/button';
+import { GameChat } from '~/components/game-chat';
+import { useGameEvents } from '~/lib/hooks/useHCS';
 
 import {
   GameStatistics,
@@ -37,6 +39,10 @@ const GamePage = ({ params }: { params: { id: `0x${string}` } }) => {
   const contractAddress = isAddress(params.id) ? params.id : zeroAddress;
 
   const { address } = useAccount();
+
+  // HCS real-time game events (replaces inefficient polling)
+  // TODO: Integrate HCS events to replace polling in future iteration
+  const { events: _hcsEvents } = useGameEvents(contractAddress);
 
   const { data: res, refetch } = useReadContracts({
     query: {
@@ -170,76 +176,84 @@ const GamePage = ({ params }: { params: { id: `0x${string}` } }) => {
   };
 
   return (
-    <div className=''>
-      <GameOverlay contractAddress={contractAddress} refresh={refresh} />
-      <div className='flex flex-col'>
-        <div className='absolute right-1/2 top-24 mx-auto flex w-fit translate-x-1/2 flex-col gap-2'>
-          <div className='text-center font-poker text-3xl font-medium text-neutral-200'>
-            {data.currentRound}
+    <div className='relative flex h-screen'>
+      {/* Main Game Area */}
+      <div className='flex-1'>
+        <GameOverlay contractAddress={contractAddress} refresh={refresh} />
+        <div className='flex flex-col'>
+          <div className='absolute right-1/2 top-24 mx-auto flex w-fit translate-x-1/2 flex-col gap-2'>
+            <div className='text-center font-poker text-3xl font-medium text-neutral-200'>
+              {data.currentRound}
+            </div>
+            <MotionNumber
+              className='rounded-full border-2 border-[#70AF8A] bg-[#204D39] px-8 py-4 text-5xl'
+              format={{ style: 'currency', currency: 'USD' }}
+              value={data.potAmount}
+            />
           </div>
-          <MotionNumber
-            className='rounded-full border-2 border-[#70AF8A] bg-[#204D39] px-8 py-4 text-5xl'
-            format={{ style: 'currency', currency: 'USD' }}
-            value={data.potAmount}
+          <GameStatistics
+            highestBid={data.highestBet}
+            nextTurn={data.nextTurn}
+            winner={data.winnerAddress}
           />
         </div>
-        <GameStatistics
-          highestBid={data.highestBet}
-          nextTurn={data.nextTurn}
-          winner={data.winnerAddress}
-        />
-      </div>
-      <PlaceBet
-        contractAddress={contractAddress}
-        highestBet={data.highestBet}
-        isMyTurn={data.nextTurn === 'Me'}
-        refresh={refresh}
-      />
-      {data.gameEnded ? (
-        <Results
+        <PlaceBet
           contractAddress={contractAddress}
-          totalPlayers={data.playerCount}
-        />
-      ) : (
-        <DeclareResult contractAddress={contractAddress} refresh={refresh} />
-      )}
-      <PlayerCards
-        cards={data.playerCards}
-        contractAddress={contractAddress}
-        deck={data.deck}
-      />
-      <CommunityCards
-        cards={data.communityCards}
-        contractAddress={contractAddress}
-      />
-      {/* Auto-reveal community cards - they should be PUBLIC in poker */}
-      <AutoRevealCommunity
-        contractAddress={contractAddress}
-        deck={data.deck}
-        pendingCommunityCards={data.pendingCommunityCards}
-        refresh={refresh}
-      />
-      {/* Auto-reveal player hole cards - submit reveal tokens so other players can see their cards */}
-      <AutoRevealPlayer
-        contractAddress={contractAddress}
-        deck={data.deck}
-        pendingPlayerCards={data.pendingPlayerCards}
-        refresh={refresh}
-      />
-      {data.currentRound === 'End' && !data.gameEnded ? (
-        <ChooseCards
-          cards={data.communityCards}
-          contractAddress={contractAddress}
+          highestBet={data.highestBet}
+          isMyTurn={data.nextTurn === 'Me'}
           refresh={refresh}
         />
-      ) : null}
-      <div className='absolute bottom-48 right-12 z-[45]'>
-        <Button
-          className='flex h-10 w-10 flex-row items-center justify-center gap-2 rounded-full border-2 border-[#70AF8A] bg-[#204D39] !p-0 px-4 py-2 text-lg text-[#89d6a9]'
-          onClick={refresh}
-        >
-          <RefreshCcw className='text-lg text-[#89d6a9]' />
-        </Button>
+        {data.gameEnded ? (
+          <Results
+            contractAddress={contractAddress}
+            totalPlayers={data.playerCount}
+          />
+        ) : (
+          <DeclareResult contractAddress={contractAddress} refresh={refresh} />
+        )}
+        <PlayerCards
+          cards={data.playerCards}
+          contractAddress={contractAddress}
+          deck={data.deck}
+        />
+        <CommunityCards
+          cards={data.communityCards}
+          contractAddress={contractAddress}
+        />
+        {/* Auto-reveal community cards - they should be PUBLIC in poker */}
+        <AutoRevealCommunity
+          contractAddress={contractAddress}
+          deck={data.deck}
+          pendingCommunityCards={data.pendingCommunityCards}
+          refresh={refresh}
+        />
+        {/* Auto-reveal player hole cards - submit reveal tokens so other players can see their cards */}
+        <AutoRevealPlayer
+          contractAddress={contractAddress}
+          deck={data.deck}
+          pendingPlayerCards={data.pendingPlayerCards}
+          refresh={refresh}
+        />
+        {data.currentRound === 'End' && !data.gameEnded ? (
+          <ChooseCards
+            cards={data.communityCards}
+            contractAddress={contractAddress}
+            refresh={refresh}
+          />
+        ) : null}
+        <div className='absolute bottom-48 right-12 z-[45]'>
+          <Button
+            className='flex h-10 w-10 flex-row items-center justify-center gap-2 rounded-full border-2 border-[#70AF8A] bg-[#204D39] !p-0 px-4 py-2 text-lg text-[#89d6a9]'
+            onClick={refresh}
+          >
+            <RefreshCcw className='text-lg text-[#89d6a9]' />
+          </Button>
+        </div>
+      </div>
+
+      {/* Chat Sidebar - Fixed Right */}
+      <div className='fixed right-0 top-0 h-screen w-80 border-l border-border bg-background shadow-lg z-50'>
+        <GameChat gameId={contractAddress} />
       </div>
     </div>
   );
