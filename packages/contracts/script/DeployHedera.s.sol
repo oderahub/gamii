@@ -3,7 +3,7 @@ pragma solidity ^0.8.13;
 
 import {Script, console} from "forge-std/Script.sol";
 import {GameFactory} from "src/GameFactory.sol";
-import {RevealVerifier} from "src/secret-engine/Verifiers.sol";
+import {RevealVerifier} from "src/zypher-verifiers/shuffle/RevealVerifier.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
 /**
