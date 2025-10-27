@@ -8,7 +8,10 @@
     "dev": "next dev",
     "format": "prettier . --write --cache",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "create-tokens": "tsx scripts/create-all-tokens.ts",
+    "create-poker-chip": "tsx scripts/create-poker-chip.ts",
+    "create-nfts": "tsx scripts/create-nfts.ts"
   },
   "dependencies": {
     "@hashgraph/sdk": "^2.49.2",
@@ -61,18 +64,20 @@
     "@next/eslint-plugin-next": "^14.2.14",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/eslint": "^8",
-    "@types/node": "^22.7.4",
+    "@types/node": "^22.18.11",
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^8.8.0",
     "@typescript-eslint/parser": "^8.8.0",
     "@vercel/style-guide": "^6.0.0",
     "config": "workspace:*",
+    "dotenv": "^17.2.3",
     "eslint": "^8",
     "postcss": "^8.4.47",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.8",
     "tailwindcss": "^3.4.13",
+    "tsx": "^4.20.6",
     "typescript": "^5.6.2"
   },
   "packageManager": "pnpm@8.11.0",
