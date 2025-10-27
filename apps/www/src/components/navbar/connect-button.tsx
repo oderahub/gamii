@@ -11,7 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '~/components/ui/dialog';
-import { connectHashPack, isHashPackInstalled, getHashPackDownloadUrl } from '~/lib/hedera/hashpack';
+import { connectHashPack, getHashPackDownloadUrl } from '~/lib/hedera/hashpack';
 import { isMetaMaskInstalled, switchToHederaNetwork, getMetaMaskDownloadUrl } from '~/lib/hedera/metamask';
 
 export const ConnectButton = () => {
@@ -45,19 +45,22 @@ export const ConnectButton = () => {
   };
 
   const handleHashPackConnect = async () => {
-    if (!isHashPackInstalled()) {
-      window.open(getHashPackDownloadUrl(), '_blank');
-      return;
-    }
-
     setIsConnectingHashPack(true);
     try {
       await connectHashPack();
       setIsDialogOpen(false);
     } catch (error) {
       console.error('HashPack connection failed:', error);
-      // Show error to user - using console for now (could use toast in production)
-      console.warn('Failed to connect to HashPack. Please try again.');
+
+      // If HashConnect fails to initialize, it likely means HashPack isn't installed
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      if (errorMessage.includes('HashConnect') || errorMessage.includes('not installed')) {
+        // Open download page
+        window.open(getHashPackDownloadUrl(), '_blank');
+      } else {
+        // Show error to user - using console for now (could use toast in production)
+        console.warn('Failed to connect to HashPack. Please try again.');
+      }
     } finally {
       setIsConnectingHashPack(false);
     }
@@ -122,9 +125,7 @@ export const ConnectButton = () => {
             <div className="flex flex-col items-start">
               <span className="font-semibold">HashPack</span>
               <span className="text-xs text-muted-foreground">
-                {isHashPackInstalled()
-                  ? 'Native Hedera wallet'
-                  : 'Download HashPack'}
+                Native Hedera wallet
               </span>
             </div>
           </Button>

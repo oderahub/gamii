@@ -141,7 +141,10 @@ export async function getTopicMessages(
   // Build query parameters
   const params = new URLSearchParams();
   if (startTimestamp) {
-    params.append('timestamp', `gt:${startTimestamp}`);
+    // Convert milliseconds to seconds.nanoseconds format for Hedera
+    const seconds = Math.floor(startTimestamp / 1000);
+    const nanoseconds = (startTimestamp % 1000) * 1000000;
+    params.append('timestamp', `gt:${seconds}.${nanoseconds.toString().padStart(9, '0')}`);
   }
   params.append('limit', '100');
   params.append('order', 'asc');

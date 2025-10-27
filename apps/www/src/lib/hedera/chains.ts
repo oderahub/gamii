@@ -10,7 +10,7 @@ export const hederaTestnet = defineChain({
   name: 'Hedera Testnet',
   network: 'hedera-testnet',
   nativeCurrency: {
-    decimals: 8,
+    decimals: 18, // MetaMask requires 18 decimals for EVM compatibility
     name: 'HBAR',
     symbol: 'HBAR',
   },
@@ -40,7 +40,7 @@ export const hederaMainnet = defineChain({
   name: 'Hedera Mainnet',
   network: 'hedera-mainnet',
   nativeCurrency: {
-    decimals: 8,
+    decimals: 18, // MetaMask requires 18 decimals for EVM compatibility
     name: 'HBAR',
     symbol: 'HBAR',
   },

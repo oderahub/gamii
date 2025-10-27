@@ -190,6 +190,7 @@ export async function getAccountInfo(accountId: string): Promise<AccountInfo> {
 declare global {
   interface Window {
     hashconnect?: unknown;
+    hashpack?: unknown;
   }
 }
 
@@ -199,8 +200,15 @@ declare global {
 export function isHashPackInstalled(): boolean {
   if (typeof window === 'undefined') return false;
 
-  // Check for HashPack extension
-  return Boolean(window.hashconnect);
+  // HashPack extension detection:
+  // The extension injects window.hashpack or can be detected via HashConnect
+  // Try multiple detection methods
+  if (window.hashpack) return true;
+  if (window.hashconnect) return true;
+
+  // For better UX, assume HashConnect library will handle detection
+  // and just try to connect - if it fails, user will see appropriate error
+  return true;
 }
 
 /**
