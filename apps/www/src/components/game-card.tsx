@@ -30,8 +30,8 @@ export const GameCard = ({ id }: GameCardProps) => {
   const router = useRouter();
   const [isJoining, setIsJoining] = useState(false);
 
-  // Strict wallet connection check
-  const walletConnected = status === 'connected' && Boolean(address) && chainId === 4202;
+  // Strict wallet connection check - Hedera Testnet chain ID is 296
+  const walletConnected = status === 'connected' && Boolean(address) && chainId === 296;
 
   const { data: res, refetch } = useQuery({
     queryKey: ['game', id, address],
@@ -92,7 +92,7 @@ export const GameCard = ({ id }: GameCardProps) => {
 
   const onJoinGame = async () => {
     if (!walletConnected) {
-      toast.error('Please connect wallet to Lisk Sepolia (Chain ID: 4202)');
+      toast.error('Please connect wallet to Hedera Testnet (Chain ID: 296)');
       return;
     }
 

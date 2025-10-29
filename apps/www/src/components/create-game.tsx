@@ -34,12 +34,12 @@ export const CreateGame = () => {
 
   const [gameId, setGameId] = useState<string>('');
 
-  // Strict wallet connection check: must be connected AND on Lisk Sepolia
-  const walletConnected = status === 'connected' && Boolean(address) && chainId === 4202;
+  // Strict wallet connection check: must be connected AND on Hedera Testnet
+  const walletConnected = status === 'connected' && Boolean(address) && chainId === 296;
 
   const onCreate = async () => {
     if (!walletConnected) {
-      toast.error('Please connect wallet to Lisk Sepolia (Chain ID: 4202)');
+      toast.error('Please connect wallet to Hedera Testnet (Chain ID: 296)');
       return;
     }
 
@@ -94,7 +94,7 @@ export const CreateGame = () => {
 
   const onJoin = async () => {
     if (!walletConnected) {
-      toast.error('Please connect wallet to Lisk Sepolia (Chain ID: 4202)');
+      toast.error('Please connect wallet to Hedera Testnet (Chain ID: 296)');
       return;
     }
 

@@ -25,6 +25,7 @@ export const env = createEnv({
     NEXT_PUBLIC_GAME_EVENTS_TOPIC_ID: z.string().optional(),
     NEXT_PUBLIC_GAME_CHAT_TOPIC_ID: z.string().optional(),
     NEXT_PUBLIC_GLOBAL_LOBBY_TOPIC_ID: z.string().optional(),
+    NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID: z.string().optional(),
   },
   experimental__runtimeEnv: {
     NEXT_PUBLIC_HEDERA_NETWORK: process.env.NEXT_PUBLIC_HEDERA_NETWORK,
@@ -43,6 +44,7 @@ export const env = createEnv({
     NEXT_PUBLIC_GAME_EVENTS_TOPIC_ID: process.env.NEXT_PUBLIC_GAME_EVENTS_TOPIC_ID,
     NEXT_PUBLIC_GAME_CHAT_TOPIC_ID: process.env.NEXT_PUBLIC_GAME_CHAT_TOPIC_ID,
     NEXT_PUBLIC_GLOBAL_LOBBY_TOPIC_ID: process.env.NEXT_PUBLIC_GLOBAL_LOBBY_TOPIC_ID,
+    NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
   },
   skipValidation: Boolean(process.env.SKIP_ENV_VALIDATION),
   emptyStringAsUndefined: true,

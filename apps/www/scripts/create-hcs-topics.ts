@@ -9,7 +9,6 @@
 
 import {
   TopicCreateTransaction,
-  TopicId,
   AccountId,
   PrivateKey,
   Client,
@@ -45,7 +44,7 @@ async function createHCSTopic(
   const topicId = receipt.topicId;
 
   console.log(`✅ Topic created: ${topicId}`);
-  return topicId?.toString() || '';
+  return topicId?.toString() ?? '';
 }
 
 async function createAllTopics() {
@@ -85,7 +84,7 @@ async function createAllTopics() {
     );
 
     // Wait a bit between transactions
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => {setTimeout(resolve, 2000)});
 
     // Create Game Chat Topic
     const gameChatTopic = await createHCSTopic(
@@ -96,7 +95,7 @@ async function createAllTopics() {
     );
 
     // Wait a bit between transactions
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => {setTimeout(resolve, 2000)});
 
     // Create Global Lobby Topic
     const globalLobbyTopic = await createHCSTopic(
@@ -155,7 +154,7 @@ createAllTopics()
     console.log('✅ HCS topic creation completed successfully!\n');
     process.exit(0);
   })
-  .catch((error) => {
+  .catch((error: unknown) => {
     console.error('❌ Fatal error:', error);
     process.exit(1);
   });

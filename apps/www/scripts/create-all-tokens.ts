@@ -22,7 +22,7 @@ async function createAllTokens() {
     const pokerChipId = await createPokerChipToken();
 
     // Wait a bit between transactions
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => {setTimeout(resolve, 2000)});
 
     // Step 2: Create NFT collections
     console.log('\n📍 Step 2/2: Creating NFT collections...\n');
@@ -61,7 +61,7 @@ createAllTokens()
     console.log('✅ Token creation process completed successfully!\n');
     process.exit(0);
   })
-  .catch((error) => {
+  .catch((error: unknown) => {
     console.error('❌ Fatal error:', error);
     process.exit(1);
   });

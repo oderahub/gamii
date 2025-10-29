@@ -46,7 +46,7 @@ const TermsPage: React.FC = () => {
           <h2 className="text-2xl font-semibold">2. Platform Description</h2>
           <div className="pl-7 space-y-2 text-muted-foreground">
             <p>
-              This is a decentralized Texas Hold&apos;em poker game built on the Lisk Sepolia blockchain
+              This is a decentralized Texas Hold&apos;em poker game built on the Hedera Testnet
               using zero-knowledge proofs for card shuffling and revealing.
             </p>
             <p><strong>Key Features:</strong></p>
@@ -64,7 +64,7 @@ const TermsPage: React.FC = () => {
           <div className="pl-7 space-y-2 text-muted-foreground">
             <p><strong>You acknowledge and accept that:</strong></p>
             <ul className="list-disc pl-5 space-y-1">
-              <li>All bets are made in real cryptocurrency (ETH on Lisk Sepolia)</li>
+              <li>All bets are made in real cryptocurrency (HBAR on Hedera Testnet)</li>
               <li>You may lose your entire stake in any game</li>
               <li>Cryptocurrency values are volatile and may fluctuate</li>
               <li>Blockchain transactions are irreversible</li>
@@ -92,7 +92,7 @@ const TermsPage: React.FC = () => {
           <div className="pl-7 space-y-2 text-muted-foreground">
             <p>This platform uses smart contracts which:</p>
             <ul className="list-disc pl-5 space-y-1">
-              <li>Are deployed on Lisk Sepolia (testnet/mainnet)</li>
+              <li>Are deployed on Hedera Testnet</li>
               <li>Have been audited but are provided &quot;as is&quot; without warranty</li>
               <li>May contain bugs or vulnerabilities</li>
               <li>Are immutable and cannot be upgraded after deployment</li>

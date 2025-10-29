@@ -1,131 +1,12 @@
 /**
- * HashPack Wallet Integration
+ * Hedera Account Utilities
  *
- * Utilities for connecting to HashPack wallet on Hedera.
- * HashPack is the most popular Hedera wallet, supporting both
- * native Hedera accounts and EVM-compatible addresses.
+ * Utility functions for working with Hedera accounts.
+ * Note: HashConnect/HashPack integration has been removed.
+ * Use MetaMask with RainbowKit for wallet connection instead.
  */
 
 import { AccountId } from '@hashgraph/sdk';
-
-/**
- * HashPack pairing data structure
- */
-export interface HashConnectPairingData {
-  accountIds: string[];
-  network: string;
-  topic: string;
-}
-
-/**
- * HashConnect instance type
- */
-interface HashConnectType {
-  init: (appMetadata: AppMetadata, network: string, debug: boolean) => Promise<void>;
-  connectToLocalWallet: () => void;
-  pairingEvent: {
-    on: (callback: (data: HashConnectPairingData) => void) => void;
-  };
-  disconnectionEvent: {
-    on: (callback: () => void) => void;
-  };
-  transactionEvent: {
-    on: (callback: (data: TransactionEventData) => void) => void;
-  };
-  sendTransaction: (accountId: string, transaction: unknown) => Promise<unknown>;
-  disconnect: () => Promise<void>;
-}
-
-interface AppMetadata {
-  name: string;
-  description: string;
-  icon: string;
-  url: string;
-}
-
-interface TransactionEventData {
-  success: boolean;
-}
-
-/**
- * Initialize HashConnect for HashPack wallet
- * Note: This requires installing hashgraph/hashconnect
- *
- * Installation:
- * ```bash
- * pnpm add @hashgraph/hashconnect
- * ```
- */
-export async function initHashPack(): Promise<HashConnectType> {
-  try {
-    // Check if HashConnect is available
-    if (typeof window === 'undefined') {
-      throw new Error('HashConnect can only be used in browser');
-    }
-
-    // Dynamic import for client-side only
-    const { HashConnect } = await import('@hashgraph/hashconnect');
-
-    const hashconnect = new HashConnect() as unknown as HashConnectType;
-
-    // Initialize (v1 API requires appMetadata and network parameters)
-    await hashconnect.init(
-      {
-        name: 'Texas Holdem ZK Poker',
-        description: 'Decentralized Texas Hold\'em Poker on Hedera',
-        icon: '/logo.png',
-        url: window.location.origin,
-      },
-      'testnet', // network
-      true // debug mode
-    );
-
-    return hashconnect;
-  } catch (error) {
-    console.error('Failed to initialize HashPack:', error);
-    throw error;
-  }
-}
-
-/**
- * Connect to HashPack wallet
- * Initiates pairing with HashPack extension/mobile app
- */
-export async function connectHashPack(): Promise<{
-  hashconnect: HashConnectType;
-  accountId: string;
-  network: string;
-  topic: string;
-}> {
-  const hashconnect = await initHashPack();
-
-  return new Promise((resolve, reject) => {
-    // Set up pairing event listener
-    hashconnect.pairingEvent.on((pairingData: HashConnectPairingData) => {
-      if (pairingData.accountIds.length === 0) {
-        const error = new Error('No accounts found in HashPack wallet');
-        reject(error);
-        return;
-      }
-
-      resolve({
-        hashconnect,
-        accountId: pairingData.accountIds[0] ?? '',
-        network: pairingData.network,
-        topic: pairingData.topic,
-      });
-    });
-
-    // Trigger connection
-    try {
-      hashconnect.connectToLocalWallet();
-    } catch (error) {
-      console.error('Failed to connect to HashPack:', error);
-      const connectionError = error instanceof Error ? error : new Error('Unknown connection error');
-      reject(connectionError);
-    }
-  });
-}
 
 /**
  * Convert Hedera account ID to EVM address
@@ -187,131 +68,22 @@ export async function getAccountInfo(accountId: string): Promise<AccountInfo> {
   }
 }
 
-declare global {
-  interface Window {
-    hashconnect?: unknown;
-    hashpack?: unknown;
-  }
-}
-
 /**
- * Check if HashPack extension is installed
- */
-export function isHashPackInstalled(): boolean {
-  if (typeof window === 'undefined') return false;
-
-  // HashPack extension detection:
-  // The extension injects window.hashpack or can be detected via HashConnect
-  // Try multiple detection methods
-  if (window.hashpack) return true;
-  if (window.hashconnect) return true;
-
-  // For better UX, assume HashConnect library will handle detection
-  // and just try to connect - if it fails, user will see appropriate error
-  return true;
-}
-
-/**
- * Get HashPack download link
- */
-export function getHashPackDownloadUrl(): string {
-  return 'https://www.hashpack.app/download';
-}
-
-/**
- * Sign a transaction with HashPack
- * This can be used for both native Hedera transactions and EVM transactions
- */
-export async function signTransaction(
-  hashconnect: HashConnectType,
-  transaction: unknown,
-  accountId: string
-): Promise<unknown> {
-  try {
-    // Send transaction to HashPack for signing
-    const result = await hashconnect.sendTransaction(accountId, transaction);
-
-    return result;
-  } catch (error) {
-    console.error('Failed to sign transaction:', error);
-    throw error;
-  }
-}
-
-/**
- * Disconnect from HashPack
- */
-export async function disconnectHashPack(hashconnect: HashConnectType): Promise<void> {
-  try {
-    await hashconnect.disconnect();
-  } catch (error) {
-    console.error('Failed to disconnect HashPack:', error);
-    throw error;
-  }
-}
-
-interface HashPackCallbacks {
-  onPaired?: (data: HashConnectPairingData) => void;
-  onDisconnected?: () => void;
-  onTransactionApproved?: (data: TransactionEventData) => void;
-  onTransactionRejected?: () => void;
-}
-
-/**
- * Listen for HashPack events
- */
-export function listenHashPackEvents(
-  hashconnect: HashConnectType,
-  callbacks: HashPackCallbacks
-): void {
-  if (callbacks.onPaired) {
-    hashconnect.pairingEvent.on((data: HashConnectPairingData) => {
-      callbacks.onPaired?.(data);
-    });
-  }
-
-  if (callbacks.onDisconnected) {
-    hashconnect.disconnectionEvent.on(() => {
-      callbacks.onDisconnected?.();
-    });
-  }
-
-  const hasTransactionHandlers = Boolean(callbacks.onTransactionApproved) || Boolean(callbacks.onTransactionRejected);
-  if (hasTransactionHandlers) {
-    hashconnect.transactionEvent.on((data: TransactionEventData) => {
-      if (data.success) {
-        callbacks.onTransactionApproved?.(data);
-      } else {
-        callbacks.onTransactionRejected?.();
-      }
-    });
-  }
-}
-
-/**
- * Example usage in a React component:
+ * Example usage:
  *
  * ```tsx
- * import { connectHashPack, getAccountInfo } from '~/lib/hedera/hashpack';
+ * import { getAccountInfo } from '~/lib/hedera/hashpack';
  *
- * function WalletConnect() {
+ * function AccountDisplay({ accountId }: { accountId: string }) {
  *   const [account, setAccount] = useState(null);
  *
- *   const handleConnect = async () => {
- *     try {
- *       const { accountId, hashconnect } = await connectHashPack();
- *       const info = await getAccountInfo(accountId);
- *       setAccount(info);
- *     } catch (error) {
- *       console.error('Connection failed:', error);
- *     }
- *   };
+ *   useEffect(() => {
+ *     getAccountInfo(accountId)
+ *       .then(setAccount)
+ *       .catch(console.error);
+ *   }, [accountId]);
  *
- *   return (
- *     <button onClick={handleConnect}>
- *       Connect HashPack
- *     </button>
- *   );
+ *   return account ? <div>Balance: {account.balance}</div> : null;
  * }
  * ```
  */

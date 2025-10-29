@@ -1,12 +1,6 @@
 import type { Abi } from 'viem';
-import {
-  type Config,
-  cookieStorage,
-  createConfig,
-  createStorage,
-  http,
-} from 'wagmi';
-import { injected } from 'wagmi/connectors';
+import { type Config, http } from 'wagmi';
+import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { env } from '~/env';
 
 import { GAME_ABI, GAME_FACTORY_ABI } from './abi';
@@ -19,23 +13,11 @@ const AddressConfig = {
   SHUFFLE_VERIFIER: env.NEXT_PUBLIC_SHUFFLE_VERIFIER_ADDRESS ?? '',
 };
 
-// Initialize connector for injected wallets (MetaMask, HashPack browser extension, etc.)
-const getConnectors = () => {
-  return [
-    injected({
-      shimDisconnect: true,
-      target: 'metaMask' // Prioritize MetaMask if available
-    }),
-  ];
-};
-
-export const wagmiConfig: Config = createConfig({
+export const wagmiConfig: Config = getDefaultConfig({
+  appName: 'Texas Hold\'em ZK Poker',
+  projectId: env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ?? '',
   chains: [hederaTestnet],
-  ssr: true,
-  storage: createStorage({
-    storage: cookieStorage,
-  }),
-  connectors: getConnectors(),
+  ssr: false, // Disable SSR for better Next.js compatibility
   transports: {
     [hederaTestnet.id]: http(env.NEXT_PUBLIC_HEDERA_JSON_RPC, {
       batch: false, // Disable batching for compatibility
@@ -52,7 +34,6 @@ export const wagmiConfig: Config = createConfig({
   batch: {
     multicall: false, // Disable global multicall batching
   },
-  cacheTime: 0,
 });
 
 export const gameFactoryConfig = {
