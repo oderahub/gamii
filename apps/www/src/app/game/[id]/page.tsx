@@ -1,26 +1,21 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+
+import { useGameEvents } from '~/lib/hooks/useHCS';
 
 import { getCurrentRound } from '~/lib/helpers';
 import { truncate } from '~/lib/utils';
 import { gameConfig } from '~/lib/viem';
 
 import MotionNumber from 'motion-number';
-import { isAddress, toHex, zeroAddress, type Hex } from 'viem';
+import { type Hex, isAddress, toHex, zeroAddress } from 'viem';
 import { useAccount, useReadContracts } from 'wagmi';
 
 import { GameOverlay } from '~/components/overlays';
 import { Button } from '~/components/ui/button';
-import { GameChat } from '~/components/game-chat';
-import { useGameEvents } from '~/lib/hooks/useHCS';
 
-import {
-  GameStatistics,
-  PlaceBet,
-  PlayerCards,
-  Results,
-} from './_components';
+import { GameStatistics, PlaceBet, PlayerCards, Results } from './_components';
 import { AutoRevealCommunity } from './_components/auto-reveal-community';
 import { AutoRevealPlayer } from './_components/auto-reveal-player';
 import { ChooseCards } from './_components/choose-cards';
@@ -39,14 +34,26 @@ const GamePage = ({ params }: { params: { id: `0x${string}` } }) => {
   const contractAddress = isAddress(params.id) ? params.id : zeroAddress;
 
   const { address } = useAccount();
+  const [shouldRefetch, setShouldRefetch] = useState(false);
 
-  // HCS real-time game events (replaces inefficient polling)
-  // TODO: Integrate HCS events to replace polling in future iteration
-  const { events: _hcsEvents } = useGameEvents(contractAddress);
+  // HCS real-time game events - listen for state changes
+  const { events: hcsEvents } = useGameEvents(contractAddress);
+
+  // Trigger refetch when HCS events arrive
+  useEffect(() => {
+    if (hcsEvents.length > 0) {
+      setShouldRefetch(true);
+      // Reset flag after refetch completes
+      const timer = setTimeout(() => setShouldRefetch(false), 100);
+      return () => clearTimeout(timer);
+    }
+  }, [hcsEvents]);
 
   const { data: res, refetch } = useReadContracts({
     query: {
-      refetchInterval: 4000, // Auto-refresh every 4 seconds
+      // OPTIMIZED: Only poll every 30 seconds as fallback
+      // HCS events will trigger immediate updates
+      refetchInterval: 30000,
       gcTime: 0, // No caching
       staleTime: 0, // Always fresh
     },
@@ -117,6 +124,13 @@ const GamePage = ({ params }: { params: { id: `0x${string}` } }) => {
     ],
   });
 
+  // Trigger refetch when HCS events signal state change
+  useEffect(() => {
+    if (shouldRefetch) {
+      void refetch();
+    }
+  }, [shouldRefetch, refetch]);
+
   const data = useMemo(() => {
     // Helper to safely convert to number, handling objects and undefined
     const safeToNumber = (value: unknown): number => {
@@ -129,7 +143,9 @@ const GamePage = ({ params }: { params: { id: `0x${string}` } }) => {
     const currentRound = getCurrentRound(safeToNumber(res?.[0]?.result));
     const potAmount = safeToNumber(res?.[1]?.result);
     const highestBet = safeToNumber(res?.[2]?.result);
-    const winnerData = res?.[3]?.result as readonly [string, bigint] | undefined;
+    const winnerData = res?.[3]?.result as
+      | readonly [string, bigint]
+      | undefined;
     const winnerAddress = (winnerData?.[0] ?? zeroAddress) as `0x${string}`;
     const nextPlayerData = res?.[4]?.result as PlayerData | undefined;
     const nextTurn =
@@ -137,20 +153,26 @@ const GamePage = ({ params }: { params: { id: `0x${string}` } }) => {
         ? 'Me'
         : truncate(nextPlayerData?.addr ?? '', 8);
     const playerCount = safeToNumber(res?.[5]?.result);
-    const gameEndedData = res?.[6]?.result as readonly [string, bigint] | undefined;
+    const gameEndedData = res?.[6]?.result as
+      | readonly [string, bigint]
+      | undefined;
     const gameEnded = gameEndedData?.[0] !== zeroAddress;
     const communityCardsRaw = (res?.[7]?.result as number[] | undefined) ?? [];
     const communityCards = communityCardsRaw.map((c) => c);
     const playerCardsRaw = (res?.[8]?.result as number[] | undefined) ?? [];
     const playerCards = playerCardsRaw.map((c) => c);
     const deckRaw = (res?.[9]?.result as bigint[][] | undefined) ?? [];
-    const deck: Hex[][] = deckRaw.map((c) => c.map((i) => toHex(i, { size: 32 })));
-    const pendingPlayerCardsRaw = (res?.[10]?.result as number[] | undefined) ?? [];
+    const deck: Hex[][] = deckRaw.map((c) =>
+      c.map((i) => toHex(i, { size: 32 }))
+    );
+    const pendingPlayerCardsRaw =
+      (res?.[10]?.result as number[] | undefined) ?? [];
     const pendingPlayerCards = pendingPlayerCardsRaw
       .filter((c) => c !== 0)
       .map((c) => c);
 
-    const pendingCommunityCardsRaw = (res?.[11]?.result as number[] | undefined) ?? [];
+    const pendingCommunityCardsRaw =
+      (res?.[11]?.result as number[] | undefined) ?? [];
     const pendingCommunityCards = pendingCommunityCardsRaw
       .filter((c) => c !== 0)
       .map((c) => c);
@@ -176,41 +198,62 @@ const GamePage = ({ params }: { params: { id: `0x${string}` } }) => {
   };
 
   return (
-    <div className='relative flex h-screen'>
-      {/* Main Game Area */}
-      <div className='flex-1'>
-        <GameOverlay contractAddress={contractAddress} refresh={refresh} />
-        <div className='flex flex-col'>
-          <div className='absolute right-1/2 top-24 mx-auto flex w-fit translate-x-1/2 flex-col gap-2'>
-            <div className='text-center font-poker text-3xl font-medium text-neutral-200'>
-              {data.currentRound}
-            </div>
-            <MotionNumber
-              className='rounded-full border-2 border-[#70AF8A] bg-[#204D39] px-8 py-4 text-5xl'
-              format={{ style: 'currency', currency: 'USD' }}
-              value={data.potAmount}
-            />
-          </div>
-          <GameStatistics
-            highestBid={data.highestBet}
-            nextTurn={data.nextTurn}
-            winner={data.winnerAddress}
-          />
+    <>
+      {/* GameOverlay handles modals */}
+      <GameOverlay contractAddress={contractAddress} refresh={refresh} />
+
+      {/* Pot Display - Top Center */}
+      <div className='pointer-events-none absolute right-1/2 top-24 z-10 mx-auto flex w-fit translate-x-1/2 flex-col gap-2'>
+        <div className='text-center font-poker text-3xl font-medium text-neutral-200'>
+          {data.currentRound}
         </div>
+        <MotionNumber
+          className='rounded-full border-2 border-[#70AF8A] bg-[#204D39] px-8 py-4 text-5xl'
+          format={{ style: 'currency', currency: 'USD' }}
+          value={data.potAmount}
+        />
+      </div>
+
+      {/* Game Stats - Top Right */}
+      <div className='pointer-events-none absolute right-12 top-24 z-10'>
+        <GameStatistics
+          highestBid={data.highestBet}
+          nextTurn={data.nextTurn}
+          winner={data.winnerAddress}
+        />
+      </div>
+
+      {/* Refresh Button - Bottom Right */}
+      <div className='pointer-events-auto absolute bottom-12 right-12 z-[45]'>
+        <Button
+          className='flex h-10 w-10 flex-row items-center justify-center gap-2 rounded-full border-2 border-[#70AF8A] bg-[#204D39] !p-0 px-4 py-2 text-lg text-[#89d6a9]'
+          onClick={refresh}
+        >
+          <RefreshCcw className='text-lg text-[#89d6a9]' />
+        </Button>
+      </div>
+
+      {/* Bottom Controls - Center */}
+      <div className='pointer-events-auto absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 gap-4'>
+        <DeclareResult contractAddress={contractAddress} refresh={refresh} />
         <PlaceBet
           contractAddress={contractAddress}
           highestBet={data.highestBet}
           isMyTurn={data.nextTurn === 'Me'}
           refresh={refresh}
         />
-        {data.gameEnded ? (
-          <Results
-            contractAddress={contractAddress}
-            totalPlayers={data.playerCount}
-          />
-        ) : (
-          <DeclareResult contractAddress={contractAddress} refresh={refresh} />
-        )}
+      </div>
+
+      {/* Results - Center Modal */}
+      {data.gameEnded ? (
+        <Results
+          contractAddress={contractAddress}
+          totalPlayers={data.playerCount}
+        />
+      ) : null}
+
+      {/* Hidden Components (off-screen, don't render visually) */}
+      <div className='hidden'>
         <PlayerCards
           cards={data.playerCards}
           contractAddress={contractAddress}
@@ -220,14 +263,12 @@ const GamePage = ({ params }: { params: { id: `0x${string}` } }) => {
           cards={data.communityCards}
           contractAddress={contractAddress}
         />
-        {/* Auto-reveal community cards - they should be PUBLIC in poker */}
         <AutoRevealCommunity
           contractAddress={contractAddress}
           deck={data.deck}
           pendingCommunityCards={data.pendingCommunityCards}
           refresh={refresh}
         />
-        {/* Auto-reveal player hole cards - submit reveal tokens so other players can see their cards */}
         <AutoRevealPlayer
           contractAddress={contractAddress}
           deck={data.deck}
@@ -241,21 +282,8 @@ const GamePage = ({ params }: { params: { id: `0x${string}` } }) => {
             refresh={refresh}
           />
         ) : null}
-        <div className='absolute bottom-48 right-12 z-[45]'>
-          <Button
-            className='flex h-10 w-10 flex-row items-center justify-center gap-2 rounded-full border-2 border-[#70AF8A] bg-[#204D39] !p-0 px-4 py-2 text-lg text-[#89d6a9]'
-            onClick={refresh}
-          >
-            <RefreshCcw className='text-lg text-[#89d6a9]' />
-          </Button>
-        </div>
       </div>
-
-      {/* Chat Sidebar - Fixed Right */}
-      <div className='fixed right-0 top-0 h-screen w-80 border-l border-border bg-background shadow-lg z-50'>
-        <GameChat gameId={contractAddress} />
-      </div>
-    </div>
+    </>
   );
 };
 
