@@ -25,33 +25,40 @@ const ChainSwitcher = ({ children }: { children: React.ReactNode }) => {
 
     const addAndSwitchChain = async () => {
       try {
-        if (switchChain) {
-          switchChain({ chainId: HEDERA_TESTNET_ID });
-        } else {
-          await window.ethereum?.request({
-            method: 'wallet_addEthereumChain',
-            params: [
-              {
-                chainId: HEDERA_TESTNET_HEX,
-                chainName: 'Hedera Testnet',
-                rpcUrls: ['https://testnet.hashio.io/api'],
-                nativeCurrency: {
-                  name: 'HBAR',
-                  symbol: 'HBAR',
-                  decimals: 18,
-                },
-                blockExplorerUrls: ['https://hashscan.io/testnet'],
-              }
-            ]
-          });
+        // Try switchChain first (wagmi v2)
+        switchChain({ chainId: HEDERA_TESTNET_ID });
+      } catch (switchError) {
+        // Fallback to manual ethereum request
+        try {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- window.ethereum is injected by MetaMask
+          if (window.ethereum && typeof window.ethereum.request === 'function') {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- MetaMask ethereum provider
+            await window.ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [
+                {
+                  chainId: HEDERA_TESTNET_HEX,
+                  chainName: 'Hedera Testnet',
+                  rpcUrls: ['https://testnet.hashio.io/api'],
+                  nativeCurrency: {
+                    name: 'HBAR',
+                    symbol: 'HBAR',
+                    decimals: 18,
+                  },
+                  blockExplorerUrls: ['https://hashscan.io/testnet'],
+                }
+              ]
+            });
 
-          await window.ethereum?.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: HEDERA_TESTNET_HEX }],
-          });
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- MetaMask ethereum provider request to add chain
+            await window.ethereum.request({
+              method: 'wallet_switchEthereumChain',
+              params: [{ chainId: HEDERA_TESTNET_HEX }],
+            });
+          }
+        } catch (ethError) {
+          console.error('Failed to add/switch via ethereum:', ethError);
         }
-      } catch (error) {
-        console.error('Failed to add/switch to Hedera Testnet:', error);
       }
     };
 

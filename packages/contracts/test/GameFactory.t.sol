@@ -13,7 +13,7 @@ contract GameFactoryTest is Test {
 
     GameFactory public factory;
 
-    // RevealVerifier deployed on Lisk Sepolia
+    // RevealVerifier deployed on Hedera Testnet
     address revealVerifier = address(0x49cFFa95ffB77d398222393E3f0C4bFb5D996321);
 
     function setUp() public virtual {

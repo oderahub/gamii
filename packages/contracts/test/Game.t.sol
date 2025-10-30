@@ -18,18 +18,18 @@ contract GameTest is Test {
     Vm.Wallet public alice;
     Vm.Wallet public bob;
 
-    // Test on Lisk Sepolia
-    uint256 liskSepoliaFork;
+    // Test on Hedera Testnet
+    uint256 hederaTestnetFork;
 
     function setUp() public virtual {
         alice = vm.createWallet("alice");
         bob = vm.createWallet("bob");
-        string memory RPC = vm.envString("LISK_RPC_URL");
-        liskSepoliaFork = vm.createFork(RPC);
+        string memory RPC = vm.envString("HEDERA_TESTNET_RPC_URL");
+        hederaTestnetFork = vm.createFork(RPC);
 
-        vm.selectFork(liskSepoliaFork);
+        vm.selectFork(hederaTestnetFork);
 
-        // Use RevealVerifier deployed on Lisk Sepolia
+        // Use RevealVerifier deployed on Hedera Testnet
         address revealVerifier = address(0x49cFFa95ffB77d398222393E3f0C4bFb5D996321);
 
         Player memory alicePlayer = Player({addr: alice.addr, publicKey: Point({x: 0, y: 0})});

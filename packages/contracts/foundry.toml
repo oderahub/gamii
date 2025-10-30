@@ -12,7 +12,7 @@ fs_permissions = [
 ]
 ffi = true
 
-# Extreme size optimization for Lisk Sepolia deployment
+# Size optimization profile
 # Use with: forge build --profile size-optimized
 [profile.size-optimized]
 src = "src"
@@ -31,11 +31,9 @@ ffi = true
 
 
 [rpc_endpoints]
-lisk_sepolia = "https://rpc.sepolia-api.lisk.com"
 hedera_testnet = "https://testnet.hashio.io/api"
 hedera_mainnet = "https://mainnet.hashio.io/api"
 
 [etherscan]
-lisk_sepolia = { key = "${ETHERSCAN_API_KEY}", url = "https://sepolia-blockscout.lisk.com/api" }
 hedera_testnet = { key = "test", url = "https://server-verify.hashscan.io" }
 hedera_mainnet = { key = "main", url = "https://server-verify.hashscan.io" }

@@ -25,8 +25,8 @@ function patchWasmModuleImport(isServer, config) {
 /** @type {import("next").NextConfig} */
 const config = {
   eslint: {
-    // ESLint warnings for submission prep - won't block build
-    ignoreDuringBuilds: true,
+    // ESLint enabled for production builds
+    ignoreDuringBuilds: false,
   },
   typescript: {
     // Relaxed for submission - fix type errors post-launch

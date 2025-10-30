@@ -193,7 +193,8 @@ export const CreateGame = () => {
   return (
     <Dialog>
       <DialogTrigger>Create or Join a Game</DialogTrigger>
-      <DialogContent>
+      <DialogContent aria-describedby="create-game-description">
+        <DialogTitle className="sr-only">Create or Join Game</DialogTitle>
         <div
           className='fixed left-[50%] top-[50%] z-50 flex translate-x-[-50%] translate-y-[-50%] gap-4 rounded-[6rem] border bg-background p-3'
           style={{
@@ -236,8 +237,10 @@ export const CreateGame = () => {
             </div>
           </div>
         </div>
+        <p id="create-game-description" className="sr-only">
+          Create a new poker game or join an existing one by entering the game ID.
+        </p>
       </DialogContent>
-      <DialogTitle />
     </Dialog>
   );
 };

@@ -50,7 +50,7 @@ contract Game is IGame, Shuffle {
     constructor(address _revealVerifier, Player memory _initialPlayer) {
         _players[_totalPlayers] = _initialPlayer;
         revealVerifier = ZgRevealVerifier(_revealVerifier);
-        // Shuffle verification done off-chain for Lisk compatibility
+        // Shuffle verification done off-chain, reveal verification on-chain
         _totalPlayers++;
         _isPlayer[_initialPlayer.addr] = true;
         _lastActionTimestamp = block.timestamp;

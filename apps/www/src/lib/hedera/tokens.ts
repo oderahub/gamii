@@ -209,3 +209,38 @@ export function parsePokerChips(amountStr: string): number {
   const amount = parseFloat(amountStr);
   return Math.floor(amount * 100);
 }
+
+// ============================================================================
+// MVP: RAKE & CHIP ECONOMY
+// ============================================================================
+
+export const RAKE_PERCENTAGE = 0.05;
+export const MAX_RAKE_TINYBARS = BigInt(10_000_000);
+export const EXCHANGE_RATE = 100;
+export const MIN_PURCHASE = 0.1;
+
+export function calculateRake(potAmount: bigint): bigint {
+  const rake = (potAmount * BigInt(Math.floor(RAKE_PERCENTAGE * 100))) / 100n;
+  return rake > MAX_RAKE_TINYBARS ? MAX_RAKE_TINYBARS : rake;
+}
+
+export function logRakeCollection(gameAddress: string, potAmount: bigint, rakeAmount: bigint, winnerAddress: string): void {
+  console.log('[HTS MVP] Rake:', { game: gameAddress, pot: potAmount, rake: rakeAmount, winner: winnerAddress });
+}
+
+export async function simulateBuyChips(playerAddress: string, hbarAmount: number): Promise<{ success: boolean; chipAmount: number; transactionId: string; }> {
+  console.log('[HTS MVP] Buy:', { player: playerAddress, hbar: hbarAmount, chips: hbarAmount * EXCHANGE_RATE, token: TOKENS.POKER_CHIP });
+  await new Promise<void>(r => { setTimeout(r, 2000); });
+  return { success: true, chipAmount: hbarAmount * EXCHANGE_RATE, transactionId: `0.0.${String(Date.now())}-mock` };
+}
+
+export function getSimulatedChipBalance(address: string): number {
+  if (typeof window === 'undefined') return 0;
+  return parseInt(localStorage.getItem(`chip_balance_${address}`) ?? '0', 10);
+}
+
+export function updateSimulatedChipBalance(address: string, amount: number): void {
+  if (typeof window === 'undefined') return;
+  const current = getSimulatedChipBalance(address);
+  localStorage.setItem(`chip_balance_${address}`, (current + amount).toString());
+}

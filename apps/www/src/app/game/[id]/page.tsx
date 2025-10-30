@@ -21,6 +21,7 @@ import { AutoRevealPlayer } from './_components/auto-reveal-player';
 import { ChooseCards } from './_components/choose-cards';
 import { CommunityCards } from './_components/community-cards';
 import { DeclareResult } from './_components/declare-result';
+import { ChatModal } from '~/components/game-chat';
 
 import { RefreshCcw } from 'lucide-react';
 
@@ -283,6 +284,9 @@ const GamePage = ({ params }: { params: { id: `0x${string}` } }) => {
           />
         ) : null}
       </div>
+
+      {/* Game Chat - Bottom Left */}
+      <ChatModal gameId={contractAddress} />
     </>
   );
 };

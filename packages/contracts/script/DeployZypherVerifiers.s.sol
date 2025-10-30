@@ -14,7 +14,7 @@ contract DeployZypherVerifiersScript is Script {
         address deployer = vm.addr(privateKey);
 
         console.log("========================================");
-        console.log("Deploying Zypher Verifiers to Lisk Sepolia");
+        console.log("Deploying Zypher Verifiers to Hedera Testnet");
         console.log("Deployer:", deployer);
         console.log("========================================\n");
 
