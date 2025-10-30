@@ -25,6 +25,8 @@ import { ChatModal } from '~/components/game-chat';
 
 import { RefreshCcw } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 // Define types for contract responses
 interface PlayerData {
   addr: string;

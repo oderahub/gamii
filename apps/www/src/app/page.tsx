@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Hero } from '~/components';
 import { LiveLobbySection } from './live-lobby-section';
+export const dynamic = 'force-dynamic';
 
 const Home = () => {
   return (

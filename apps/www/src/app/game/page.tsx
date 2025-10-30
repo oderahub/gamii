@@ -7,6 +7,8 @@ import { gameFactoryConfig } from '~/lib/viem';
 import { useReadContract } from 'wagmi';
 import { GameCard } from '~/components';
 
+export const dynamic = 'force-dynamic';
+
 const Games = () => {
   const { data: totalGames } = useReadContract({
     ...gameFactoryConfig,

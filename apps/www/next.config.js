@@ -24,6 +24,7 @@ function patchWasmModuleImport(isServer, config) {
 
 /** @type {import("next").NextConfig} */
 const config = {
+  trailingSlash: false,
   eslint: {
     // ESLint enabled for production builds
     ignoreDuringBuilds: false,

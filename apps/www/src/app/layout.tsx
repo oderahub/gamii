@@ -1,15 +1,14 @@
 import localFont from 'next/font/local';
-
 import { GeistSans } from 'geist/font/sans';
 import type { Metadata } from 'next';
-import { Navbar } from '~/components';
-import { Web3Provider } from '~/providers';
 import '~/styles/globals.css';
+import dynamic from 'next/dynamic';
 
-import { Toaster } from '~/components/ui/sonner';
-import { AgeVerificationModal } from '~/components/age-verification';
-
-import { ThemeProvider } from '../providers/theme-provider';
+// IMPORTANT: disable SSR for client-only providers (wallet, indexedDB users)
+const ClientRoot = dynamic(
+  () => import('~/components/client-root').then((m) => ({ default: m.ClientRoot })),
+  { ssr: false }
+);
 
 const pokerFont = localFont({
   src: '../../public/fonts/poker.otf',
@@ -22,21 +21,12 @@ export const metadata: Metadata = {
   icons: [{ rel: 'icon', url: '/favicon.ico' }],
 };
 
-const RootLayout = ({ children }: { children: React.ReactNode }) => {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang='en'>
+    <html lang="en">
       <body className={`font-sans ${GeistSans.variable} ${pokerFont.variable}`}>
-        <ThemeProvider>
-          <Web3Provider>
-            <AgeVerificationModal />
-            <Navbar />
-            {children}
-            <Toaster />
-          </Web3Provider>
-        </ThemeProvider>
+        <ClientRoot>{children}</ClientRoot>
       </body>
     </html>
   );
-};
-
-export default RootLayout;
+}

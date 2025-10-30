@@ -1,6 +1,8 @@
 import React from 'react';
 import { Shield, AlertTriangle, Info } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 const TermsPage: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl">

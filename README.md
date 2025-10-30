@@ -2,12 +2,10 @@
 
 ### The Future of Online Poker: Transparent, Fair, and Decentralized
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Built on Hedera](https://img.shields.io/badge/Built%20on-Hedera-purple)](https://hedera.com)
-[![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org)
+**Pitch deck link:** https://pitch.com/v/provable-fairness-in-zk-poker-asesx4
 
-**Live Demo:** [Coming Soon]  
+
+
 **Video Demo:** [Coming Soon]  
 **Deployed Contracts:** [HashScan Explorer](https://hashscan.io/testnet/contract/0x8701aC94337A987957a6F0a74448Dbc6F67b0D58)
 
