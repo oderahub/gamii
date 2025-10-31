@@ -172,7 +172,7 @@ export const BettingOverlay = ({ contractAddress, refresh }: OverlayProps) => {
             const amount = parseEther(betAmount);
 
             if (amount < callAmount) {
-                throw new Error(`Minimum bet is ${formatEther(callAmount)} ETH to call`);
+                throw new Error(`Minimum bet is ${formatEther(callAmount)} HBAR to call`);
             }
 
             const hash = await writeContractAsync({
@@ -180,7 +180,7 @@ export const BettingOverlay = ({ contractAddress, refresh }: OverlayProps) => {
                 address: contractAddress,
                 functionName: 'placeBet',
                 args: [amount],
-                value: amount, // CRITICAL: Send ETH with the transaction
+                value: amount, // CRITICAL: Send HBAR with the transaction
             });
 
             toast.loading('Confirming transaction...', { id });
@@ -251,14 +251,14 @@ export const BettingOverlay = ({ contractAddress, refresh }: OverlayProps) => {
 
                 <div className='flex flex-col gap-2 text-center text-lg'>
                     <div className='text-neutral-300'>
-                        Highest Bet: <span className='font-bold text-yellow-500'>{formatEther(highestBet)} ETH</span>
+                        Highest Bet: <span className='font-bold text-yellow-500'>{formatEther(highestBet)} HBAR</span>
                     </div>
                     <div className='text-neutral-300'>
-                        Your Bet: <span className='font-bold text-green-500'>{formatEther(myBet)} ETH</span>
+                        Your Bet: <span className='font-bold text-green-500'>{formatEther(myBet)} HBAR</span>
                     </div>
                     {Boolean(callAmount > 0n) && (
                         <div className='text-neutral-300'>
-                            To Call: <span className='font-bold text-orange-500'>{formatEther(callAmount)} ETH</span>
+                            To Call: <span className='font-bold text-orange-500'>{formatEther(callAmount)} HBAR</span>
                         </div>
                     )}
                 </div>
@@ -307,7 +307,7 @@ export const BettingOverlay = ({ contractAddress, refresh }: OverlayProps) => {
                     <>
                         <div className='flex flex-col gap-2'>
                             <label className='text-center font-poker text-xl text-neutral-300' htmlFor='bet-amount'>
-                                Bet Amount (ETH)
+                                Bet Amount (HBAR)
                             </label>
                             <Input
                                 className='rounded-xl border-2 border-yellow-600 bg-neutral-800 text-center text-xl font-bold text-white'
@@ -338,7 +338,7 @@ export const BettingOverlay = ({ contractAddress, refresh }: OverlayProps) => {
                                     className='bg-green-600 font-poker text-lg hover:bg-green-700'
                                     onClick={onCall}
                                 >
-                                    Call {formatEther(callAmount)} ETH
+                                    Call {formatEther(callAmount)} HBAR
                                 </Button>
                             )}
 
@@ -346,7 +346,7 @@ export const BettingOverlay = ({ contractAddress, refresh }: OverlayProps) => {
                                 className='bg-blue-600 font-poker text-lg hover:bg-blue-700'
                                 onClick={onPlaceBet}
                             >
-                                Raise {betAmount} ETH
+                                Raise {betAmount} HBAR
                             </Button>
 
                             <Button

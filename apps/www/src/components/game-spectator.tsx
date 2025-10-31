@@ -80,7 +80,7 @@ export const GameSpectator = ({ gameId, className }: GameSpectatorProps) => {
             </div>
             <div className='rounded-lg bg-muted p-3'>
               <p className='text-xs text-muted-foreground'>Pot</p>
-              <p className='text-lg font-semibold'>{gameState.pot} ETH</p>
+              <p className='text-lg font-semibold'>{gameState.pot} HBAR</p>
             </div>
             <div className='rounded-lg bg-muted p-3'>
               <p className='text-xs text-muted-foreground'>Current</p>

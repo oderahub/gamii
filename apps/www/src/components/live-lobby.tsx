@@ -136,7 +136,7 @@ const GameCard = ({ game }: GameCardProps) => {
         </div>
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">Buy-in</span>
-          <span className="font-semibold">{game.buyIn} ETH</span>
+          <span className="font-semibold">{game.buyIn} HBAR</span>
         </div>
       </div>
 

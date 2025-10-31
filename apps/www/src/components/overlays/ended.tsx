@@ -79,14 +79,14 @@ export const EndedOverlay = ({ contractAddress }: OverlayProps) => {
 
                     <div className='border-t border-neutral-600 pt-4'>
                         <div className='text-center text-3xl font-bold text-green-400'>
-                            Prize: {formatEther(totalPotValue)} ETH
+                            Prize: {formatEther(totalPotValue)} HBAR
                         </div>
                     </div>
                 </div>
 
                 <div className='flex flex-col gap-2 text-center text-lg text-neutral-400'>
                     <div>Total Players: {String(totalPlayers)}</div>
-                    <div>Total Pot: {formatEther(totalPotValue)} ETH</div>
+                    <div>Total Pot: {formatEther(totalPotValue)} HBAR</div>
                 </div>
 
                 {Boolean(isWinner) && (

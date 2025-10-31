@@ -17,8 +17,8 @@ export const GameStatistics = ({
   winner,
   nextTurn,
 }: GameStatisticsProps) => {
-  // Convert Wei to ETH for display
-  const highestBidInEth = parseFloat(formatEther(BigInt(highestBid)));
+  // Convert Wei to HBAR for display
+  const highestBidInHbar = parseFloat(formatEther(BigInt(highestBid)));
 
   return (
     <div className='absolute right-12 top-24 flex flex-col items-center gap-3 text-xl'>
@@ -28,9 +28,9 @@ export const GameStatistics = ({
           <div className='flex items-center gap-1 overflow-hidden'>
             <MotionNumber
               className='text-xl font-bold tabular-nums'
-              value={highestBidInEth}
+              value={highestBidInHbar}
             />
-            <span className='text-sm text-yellow-400'>ETH</span>
+            <span className='text-sm text-yellow-400'>HBAR</span>
           </div>
         </div>
         <div className='flex flex-row justify-between gap-4'>
