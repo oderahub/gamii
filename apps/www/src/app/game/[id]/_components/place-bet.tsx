@@ -59,6 +59,7 @@ export const PlaceBet = ({
           address: contractAddress,
           functionName: 'placeBet',
           args: [BigInt(betAmount)],
+          value: BigInt(betAmount), // Send the actual HBAR with the transaction
         });
         await waitForTransactionReceipt(wagmiConfig, { hash });
 

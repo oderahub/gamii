@@ -122,7 +122,7 @@ const PlayerCard = ({ cardIndex, contractAddress, deck }: PlayerCard) => {
   const { data } = useQuery({
     queryKey: ['player-card', contractAddress, cardIndex],
     initialData: -1,
-    refetchInterval: 8000, // Reduced frequency to prevent rate limiting
+    refetchInterval: 15000, // Poll every 15 seconds to avoid rate limiting
     queryFn: async () => {
       try {
         if (!address) {
