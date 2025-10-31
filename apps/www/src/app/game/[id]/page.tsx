@@ -255,17 +255,19 @@ const GamePage = ({ params }: { params: { id: `0x${string}` } }) => {
         />
       ) : null}
 
-      {/* Hidden Components (off-screen, don't render visually) */}
+      {/* Game Cards - Positioned on Table */}
+      <PlayerCards
+        cards={data.playerCards}
+        contractAddress={contractAddress}
+        deck={data.deck}
+      />
+      <CommunityCards
+        cards={data.communityCards}
+        contractAddress={contractAddress}
+      />
+
+      {/* Auto-reveal components (invisible but functional) */}
       <div className='hidden'>
-        <PlayerCards
-          cards={data.playerCards}
-          contractAddress={contractAddress}
-          deck={data.deck}
-        />
-        <CommunityCards
-          cards={data.communityCards}
-          contractAddress={contractAddress}
-        />
         <AutoRevealCommunity
           contractAddress={contractAddress}
           deck={data.deck}
@@ -278,14 +280,16 @@ const GamePage = ({ params }: { params: { id: `0x${string}` } }) => {
           pendingPlayerCards={data.pendingPlayerCards}
           refresh={refresh}
         />
-        {data.currentRound === 'End' && !data.gameEnded ? (
-          <ChooseCards
-            cards={data.communityCards}
-            contractAddress={contractAddress}
-            refresh={refresh}
-          />
-        ) : null}
       </div>
+
+      {/* Choose Cards UI - Show in END phase */}
+      {data.currentRound === 'End' && !data.gameEnded ? (
+        <ChooseCards
+          cards={data.communityCards}
+          contractAddress={contractAddress}
+          refresh={refresh}
+        />
+      ) : null}
 
       {/* Game Chat - Bottom Left */}
       <ChatModal gameId={contractAddress} />

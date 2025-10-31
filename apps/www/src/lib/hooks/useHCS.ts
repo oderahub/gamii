@@ -14,7 +14,6 @@ import {
   getGameChat,
   getLobbyState,
   submitGameEvent,
-  submitChatMessage,
   MessageType,
 } from '~/lib/hedera/hcs';
 
@@ -122,16 +121,39 @@ export function useGameChat(gameId: string | undefined, enabled = true) {
     };
   }, [gameId, enabled]);
 
-  // Function to send a message
+  // Function to send a message via API route (server-side)
   const sendMessage = useCallback(
     async (sender: string, senderAddress: string, message: string) => {
       if (!gameId) return;
 
       setSending(true);
       try {
-        await submitChatMessage(gameId, sender, senderAddress, message);
+        // Call API route instead of direct HCS submission
+        // (server-side has access to private key)
+        const response = await fetch('/api/chat/send', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            gameId,
+            sender,
+            senderAddress,
+            message,
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to send message');
+        }
+
+        const result = await response.json();
+        console.log('[Chat] Message sent:', result);
       } catch (err) {
+        console.error('[Chat] Send error:', err);
         setError(err as Error);
+        throw err; // Re-throw so UI can handle it
       } finally {
         setSending(false);
       }

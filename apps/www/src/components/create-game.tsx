@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { useShuffle } from '~/lib/hooks';
 import { errorHandler } from '~/lib/utils';
 import { gameConfig, gameFactoryConfig, wagmiConfig } from '~/lib/viem';
+import { env } from '~/env';
 
 import { readContract, waitForTransactionReceipt, simulateContract } from '@wagmi/core';
 import GoldBG from 'public/gold-bg.webp';
@@ -47,8 +48,20 @@ export const CreateGame = () => {
     try {
       console.log('[CreateGame] Wallet:', address, 'Chain:', chainId);
       console.log('[CreateGame] GameFactory:', gameFactoryConfig.address);
+
+      // Get reveal verifier address from environment
+      const revealVerifier = env.NEXT_PUBLIC_REVEAL_VERIFIER_ADDRESS;
+
+      // Validate reveal verifier is configured
+      if (!revealVerifier || !isAddress(revealVerifier)) {
+        throw new Error(
+          'Reveal verifier address not configured or invalid. Please check NEXT_PUBLIC_REVEAL_VERIFIER_ADDRESS in environment variables.'
+        );
+      }
+
+      console.log('[CreateGame] Reveal Verifier:', revealVerifier);
+
       const salt = keccak256(Buffer.from(crypto.randomUUID()));
-      const revealVerifier = '0x49cFFa95ffB77d398222393E3f0C4bFb5D996321';
       const key = await getKey(address);
 
       const hash = await writeContractAsync({
