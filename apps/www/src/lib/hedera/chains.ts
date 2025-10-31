@@ -16,10 +16,18 @@ export const hederaTestnet = defineChain({
   },
   rpcUrls: {
     default: {
-      http: ['https://testnet.hashio.io/api'],
+      http: [
+        'https://testnet.hashio.io/api',
+        'https://testnet.mirrornode.hedera.com',
+        'https://pool.arkhia.io/hedera/testnet/json-rpc/v1',
+      ],
     },
     public: {
-      http: ['https://testnet.hashio.io/api'],
+      http: [
+        'https://testnet.hashio.io/api',
+        'https://testnet.mirrornode.hedera.com',
+        'https://pool.arkhia.io/hedera/testnet/json-rpc/v1',
+      ],
     },
   },
   blockExplorers: {

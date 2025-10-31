@@ -80,7 +80,7 @@ export const BettingOverlay = ({ contractAddress, refresh }: OverlayProps) => {
             },
         ],
         query: {
-            refetchInterval: 1000,
+            refetchInterval: 5000, // Reduced from 1s to 5s to prevent rate limiting
         },
     });
 

@@ -44,7 +44,7 @@ const CommunityCard = ({ contractAddress, cardIndex }: CommunityCardProps) => {
   const data = useQuery({
     queryKey: ['community-card', contractAddress, cardIndex],
     initialData: null,
-    refetchInterval: 2000,
+    refetchInterval: 8000, // Reduced frequency to prevent rate limiting
     queryFn: async () => {
       try {
         const card = await readContract(wagmiConfig, {

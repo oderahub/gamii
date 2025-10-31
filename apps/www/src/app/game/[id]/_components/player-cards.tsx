@@ -86,9 +86,8 @@ export const PlayerCards = ({
             <button
               key={tab.id}
               type='button'
-              className={`${
-                activeTab === tab.id ? '' : 'hover:text-white/60'
-              } relative rounded-full px-3 py-1.5 text-sm font-medium text-white outline-sky-400 transition focus-visible:outline-2`}
+              className={`${activeTab === tab.id ? '' : 'hover:text-white/60'
+                } relative rounded-full px-3 py-1.5 text-sm font-medium text-white outline-sky-400 transition focus-visible:outline-2`}
               style={{
                 WebkitTapHighlightColor: 'transparent',
               }}
@@ -123,7 +122,7 @@ const PlayerCard = ({ cardIndex, contractAddress, deck }: PlayerCard) => {
   const { data } = useQuery({
     queryKey: ['player-card', contractAddress, cardIndex],
     initialData: -1,
-    refetchInterval: 2000,
+    refetchInterval: 8000, // Reduced frequency to prevent rate limiting
     queryFn: async () => {
       try {
         if (!address) {
@@ -135,10 +134,10 @@ const PlayerCard = ({ cardIndex, contractAddress, deck }: PlayerCard) => {
           functionName: 'getRevealTokens',
           args: [cardIndex],
         });
-        
+
         // Type assertion for the response
         const revealTokens = res as RevealToken[];
-        
+
         const rTokens = revealTokens
           .filter((t) => t.player !== address)
           .map(

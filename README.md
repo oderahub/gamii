@@ -2,22 +2,139 @@
 
 ### The Future of Online Poker: Transparent, Fair, and Decentralized
 
-**Pitch deck link:** https://pitch.com/v/provable-fairness-in-zk-poker-asesx4
+**Hackathon Track:** Gaming, NFTs,Onchain Finance & RWA  
+**Pitch Deck:** https://drive.google.com/file/d/1sNVb-F98ZWAyqB49eya3298q2tDFj8rv/view?usp=sharing 
+**Hedera Certification:** https://drive.google.com/file/d/1Ot6JTNItSkMGXVRSrL_YbjASxK5B1yH2/view?usp=sharing  
+**Video Demo:** [3-Minute Live Demo - Coming Soon]  
+
+
+## 🏗️ Hedera Integration Summary
+
+### Hedera Consensus Service (HCS)
+**Why HCS:** We chose HCS for immutable game event logging because its predictable $0.0001 fee guarantees operational cost stability essential for micro-transaction poker games in Africa. HCS provides cryptographic proof of game integrity without requiring expensive on-chain storage.
+
+**Implementation:** All critical game events (shuffles, bets, reveals) are submitted to HCS Topic ID `0.0.4635534` creating an immutable audit trail that players can verify independently.
+
+### Hedera Token Service (HTS)
+**Why HTS:** HTS enables native CHIP token creation with built-in compliance features and fractional transfers essential for poker betting. The $1 token creation fee is significantly lower than Ethereum's gas costs, making it viable for African markets.
+
+**Implementation:** CHIP tokens (ID: `0.0.4635535`) represent poker chips with 8 decimal precision, allowing micro-bets as low as 0.00000001 HBAR equivalent.
+
+### Hedera Smart Contract Service (HSCS)
+**Why HSCS:** HSCS provides deterministic smart contract execution with ABFT finality, ensuring poker game state transitions are final and cannot be reversed - critical for gambling applications where trust is paramount.
 
 
 
-**Video Demo:** [Coming Soon]  
-**Deployed Contracts:** [HashScan Explorer](https://hashscan.io/testnet/contract/0x8701aC94337A987957a6F0a74448Dbc6F67b0D58)
+### Transaction Types Executed
+- `ContractExecuteTransaction`: Poker game actions (bet, fold, reveal)
+- `TopicMessageSubmitTransaction`: Game event logging to HCS
+- `TokenCreateTransaction`: CHIP token creation
+- `TokenTransferTransaction`: Chip transfers between players
+- `ContractCreateTransaction`: Poker contract deployment
 
----
+### Economic Justification
+Hedera's predictable fees ($0.0001 for HCS, $0.001 for contract calls) enable sustainable micro-transaction poker with 99.9% lower costs than Ethereum, making it accessible to African users with limited capital.
+
+## 🚀 Deployment & Setup Instructions
+
+### Prerequisites
+- Node.js 18+
+- pnpm package manager
+- Hedera Testnet account
+
+### Quick Start
+```bash
+# 1. Clone repository
+git clone https://github.com/oderahub/Texas-Hold.git
+cd Texas-Hold
+
+# 2. Install dependencies
+pnpm install
+
+# 3. Configure environment variables
+cp .env.example .env.local
+# Edit .env.local with your Hedera credentials
+
+# 4. Start development server
+pnpm dev
+```
+
+### Environment Configuration
+Create `.env.local` with:
+```bash
+HEDERA_ACCOUNT_ID=0.0.YOUR_ACCOUNT
+HEDERA_PRIVATE_KEY=your_private_key_here
+NEXT_PUBLIC_CONTRACT_ADDRESS=0x8701aC94337A987957a6F0a74448Dbc6F67b0D58
+NEXT_PUBLIC_HCS_TOPIC_ID=0.0.4635534
+NEXT_PUBLIC_CHIP_TOKEN_ID=0.0.4635535
+```
+
+### Running Environment
+- Frontend: `http://localhost:3000`
+- Backend API: `http://localhost:3000/api`
+- Hedera Network: Testnet
+
+## 🏛️ Architecture Diagram
+
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────────┐
+│   React Frontend│    │   Next.js API    │    │   Hedera Network    │
+│                 │    │                  │    │                     │
+│ • Game UI       │◄──►│ • Contract Calls │◄──►│ • Smart Contracts   │
+│ • Wallet Connect│    │ • HCS Logging    │    │ • HCS Topics        │
+│ • Real-time     │    │ • Token Transfers│    │ • HTS Tokens        │
+│   Updates       │    │                  │    │ • Mirror Nodes      │
+└─────────────────┘    └──────────────────┘    └─────────────────────┘
+         ▲                        ▲                        ▲
+         │                        │                        │
+         ▼                        ▼                        ▼
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────────┐
+│   User Wallet   │    │   Game State     │    │   Blockchain        │
+│                 │    │                  │    │                     │
+│ • HashPack      │    │ • Player Actions │    │ • Immutable Ledger  │
+│ • MetaMask      │    │ • Betting Rounds │    │ • Transaction Hash  │
+│ • Private Keys  │    │ • Card Reveals   │    │ • Finality (3s)     │
+└─────────────────┘    └──────────────────┘    └─────────────────────┘
+```
+
+## 🆔 Deployed Hedera IDs
+
+### Testnet Deployment
+- **CHIP Token:** `0.0.4635535`
+- **HCS Topic:** `0.0.4635534`
+- **Treasury Account:** `0.0.4635533`
+- **Game Factory:** `0xfc798e9eec9819f4b94466a684ceb6ce074169fa`
+- **REVEAL_VERIFIER:** `0xc7a62370f1e4415b20c5cbbde21de6e9b878634c`
+
+### Security & Secrets
+⚠️ **IMPORTANT:** Never commit private keys to version control!
+
+- Use `.env.local` for local development
+- Example configuration provided in `.env.example`
+- Test credentials available in DoraHacks submission notes
 
 ## 🎯 Executive Summary
 
-**Texas Hold'em ZK Poker** is the world's first fully transparent, provably fair poker game built on **Hedera Hashgraph**, combining zero-knowledge proofs for card shuffling with Hedera's enterprise-grade distributed ledger technology. Players interact peer-to-peer with instant finality, cryptographically verified card dealing, and transparent stake settlement.
+**Texas Hold'em ZK Poker** is a fully transparent poker platform built on Hedera Hashgraph.
+Every shuffle, deal, and reveal is cryptographically proven fair using zero-knowledge proofs, ensuring no one not even the server can cheat.
+With Hedera’s 3-second finality, sub-cent fees, and native token + consensus services, we deliver the first real-time, trustless poker experience for millions of players worldwide.
 
 ### The Problem We Solve
 
-The $60+ billion online poker industry faces three critical issues:
+
+The $60B online poker market is broken by mistrust.
+Players must “believe” that the house is fair — but have zero cryptographic proof.
+Every shuffle, hand, and payout happens inside a black box.
+
+The result?
+
+Billions lost to unfair algorithms and rigged RNGs
+
+Centralized operators taking up to 10% rake per game
+
+Players in developing regions locked out by high entry costs
+
+The lack of verifiable fairness is the single biggest blocker to mainstream blockchain gaming adoption.
 
 1. **Trust Crisis**: Players must trust centralized platforms with shuffling and dealing
 2. **Lack of Transparency**: Proprietary algorithms with no way to verify fairness
@@ -95,8 +212,8 @@ DeckManager.sol       - Encrypted deck shuffling logic
 - **Upgradeability**: Factory pattern allows seamless protocol upgrades
 
 **Deployed Contracts:**
-- GameFactory: `0x8701aC94337A987957a6F0a74448Dbc6F67b0D58`
-- RevealVerifier: `0x2001A5eD2d73f97a3D09099501CE245258aA4524`
+- **Game Factory:** `0xfc798e9eec9819f4b94466a684ceb6ce074169fa`
+- **REVEAL_VERIFIER:** `0xc7a62370f1e4415b20c5cbbde21de6e9b878634c`
 
 ### 2. **Hedera Token Service (HTS)** 💰
 
@@ -352,7 +469,7 @@ Blockchain errors are translated to user-friendly messages. See error mappings i
 4. **Premium Features** - Analytics, statistics, replays
    - **Projected**: $300-500K ARR
 
-5. **B2B White-Label Licensing** - $100K setup + 1% rake share
+5. **Spectators pot fees* - $100K setup + 1% rake share
    - **Projected**: $1-3M ARR
 
 6. **Staking Rewards** - CHIP holders earn 30% of rake
@@ -363,45 +480,68 @@ Blockchain errors are translated to user-friendly messages. See error mappings i
 
 ## 🌍 Go-To-Market Strategy
 
+We are not building a gambling site — we’re launching the first zero-knowledge, skill-based gaming protocol on Hedera.
+Players compete transparently, earn provably fair rewards, and interact with a trained AI Dealer that verifies fairness and gameplay on-chain.
+
 ### Target Markets
 1. **Africa** (50M+ potential players, mobile-first, crypto-friendly)
 2. **Southeast Asia** (100M+ players, high crypto adoption)
 3. **Latin America** (80M+ players, remittance use case)
 4. **Europe** (200M+ players, regulated markets)
 
-### Phase 1: Testnet Launch (Q1 2025) - **CURRENT** ✅
-- **Goal**: 1,000 active players, validate product-market fit
+### Phase 1: Testnet Launch (Q4 2025) - **CURRENT** ✅
+- **Goal**: Validate fairness, gameplay, and retention with early adopters.
 - **Tactics**:
-  - Hedera community incentives (100,000 CHIP airdrop)
-  - Crypto Twitter marketing ($10K budget)
-  - Partner with 3-5 crypto influencers
-- **KPIs**: 1K MAU, $50K total volume
 
-### Phase 2: Mainnet Beta (Q2 2025)
-- **Goal**: 10,000 active players, $1M monthly volume
-- **Tactics**:
-  - Launch on Product Hunt, HackerNews
-  - $50K marketing budget (focused on Africa, SEA)
-  - Weekly tournaments with HBAR prizes
-  - Mobile app (React Native)
-- **KPIs**: 10K MAU, $1M monthly volume, 200 concurrent tables
+  - Launch Bounty Plan: “Play. Win. Verify.” — top players earn rewards by stress-testing ZK fairness proofs.
 
-### Phase 3: Scale (Q3-Q4 2025)
-- **Goal**: 100,000 players, $10M monthly volume
+  - Community Bounties: Invite 500 testers to challenge our AI dealer; winners share the testnet pot.
+
+  - Incentivize via 100,000 CHIP airdrop and Hedera community quests.
+
+  - Social push via Crypto Twitter, Telegram, and Hedera Guilds.
+
+- **KPIs**: 1K active players • $50K on-chain volume • 95% fairness verification uptime
+
+### Phase 2: Mainnet Beta (Q2 2026)
+- **Goal**: 10K active users, $1M monthly volume
 - **Tactics**:
-  - Regional partnerships (Africa, SEA)
-  - Fiat on-ramps via MoonPay/Ramp
-  - Regulatory licenses (Malta, Gibraltar)
-  - Pro player sponsorships
-- **KPIs**: 100K MAU, $10M monthly volume, Break-even
+
+  - “Win Our Trained AI” campaign — players compete against the AI dealer; leaderboard winners go home with the pot.
+
+  - Launch on Product Hunt, Hacker News, and Web3 gaming hubs
+
+  - Weekly skill-based tournaments with on-chain HBAR rewards
+
+  - Mobile app (React Native) for Africa & SEA regions
+
+- **KPIs**: 10K MAU • $1M volume • 200 concurrent tables
+
+### Phase 3: Scale (Q3-Q4 2026)
+- **Goal**: 100K+ players, $10M monthly volume
+- **Tactics**:
+
+  - Regional partnerships (crypto hubs in Lagos, Nairobi, Manila)
+
+  - Fiat on-ramps via MoonPay / Ramp
+
+  - Regulatory partnerships for skill-based classification
+
+  - Sponsorships with Web3 influencers and eSports teams
+
+- **KPIs**: 100K MAU • $10M volume • Break-even operations
 
 ### Phase 4: Dominance (2026+)
-- **Goal**: 1M+ players, PokerStars-level traffic
+- **Goal**: 1M+ players, mainstream adoption
 - **Tactics**:
-  - TV advertising in key markets
-  - Live tournament circuit (Hedera Poker Tour)
-  - Acquisition of traditional poker platforms
-- **KPIs**: 1M+ MAU, $100M+ annual revenue
+
+  - Hedera Poker League — global skill circuit with verifiable fairness
+
+  - TV & live-streamed tournaments
+
+  - Acquisition of legacy online poker or rummy platforms migrating to ZK infrastructure
+
+- **KPIs**: 1M+ MAU • $100M annual revenue
 
 ---
 
