@@ -9,7 +9,7 @@
 **Hackathon Track:** Gaming, NFTs,Onchain Finance & RWA  
 **Pitch Deck:** https://drive.google.com/file/d/1sNVb-F98ZWAyqB49eya3298q2tDFj8rv/view?usp=sharing 
 **Hedera Certification:** https://drive.google.com/file/d/1Ot6JTNItSkMGXVRSrL_YbjASxK5B1yH2/view?usp=sharing  
-**Video Demo:** [3-Minute Live Demo - Coming Soon]  
+**Video Demo:** https://www.loom.com/share/11de5e6fc7604bda8ef4617ae512bfed  
 
 
 ## 🏗️ Hedera Integration Summary
