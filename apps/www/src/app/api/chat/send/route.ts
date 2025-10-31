@@ -5,12 +5,19 @@
  * Hedera private keys are accessible.
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { submitChatMessage } from '~/lib/hedera/hcs';
+
+interface ChatMessageRequest {
+  gameId: string;
+  sender: string;
+  senderAddress: string;
+  message: string;
+}
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const body = (await request.json()) as ChatMessageRequest;
     const { gameId, sender, senderAddress, message } = body;
 
     // Validation
