@@ -640,7 +640,7 @@ Blockchain errors are translated to user-friendly messages. See error mappings i
 
 ## 🌍 Go-To-Market Strategy
 
-We are not building a gambling site — we’re launching the first zero-knowledge, skill-based gaming protocol on Hedera.
+We are not building a gambling site — we’re launching a zero-knowledge, skill-based gaming protocol on Hedera.
 Players compete transparently, earn provably fair rewards, and interact with a trained AI Dealer that verifies fairness and gameplay on-chain.
 
 ### Target Markets

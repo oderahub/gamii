@@ -94,7 +94,25 @@ export function useGameChat(gameId: string | undefined, enabled = true) {
         const newMessages = await getGameChat(gameId, lastTimestampRef.current);
 
         if (isMounted && newMessages.length > 0) {
-          setMessages(prev => [...prev, ...newMessages]);
+          setMessages(prev => {
+            // Create a Set of existing message keys to check for duplicates
+            const existingKeys = new Set(
+              prev.map(m => `${m.timestamp}-${m.playerAddress}-${m.data.message}`)
+            );
+
+            // Filter out duplicates from new messages
+            const uniqueNewMessages = newMessages.filter(
+              m => !existingKeys.has(`${m.timestamp}-${m.playerAddress}-${m.data.message}`)
+            );
+
+            // Only add if we have unique messages
+            if (uniqueNewMessages.length > 0) {
+              return [...prev, ...uniqueNewMessages];
+            }
+
+            return prev;
+          });
+
           lastTimestampRef.current = Math.max(...newMessages.map(m => m.timestamp));
         }
 
