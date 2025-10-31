@@ -1,3 +1,7 @@
+<p align="center">
+<img src="./assets/logo-text.png" alt=""  width="400px"/></p>
+
+
 # 🎰 Texas Hold'em ZK Poker on Hedera
 
 ### The Future of Online Poker: Transparent, Fair, and Decentralized
